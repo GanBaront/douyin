@@ -363,12 +363,12 @@ onUnmounted(() => {
 
 onActivated(() => {
   state.active = true
-  bus.emit(EVENT_KEY.TOGGLE_CURRENT_VIDEO)
+  bus.emit(EVENT_KEY.RESUME_CURRENT_VIDEO)
 })
 
 onDeactivated(() => {
   state.active = false
-  bus.emit(EVENT_KEY.TOGGLE_CURRENT_VIDEO)
+  bus.emit(EVENT_KEY.PAUSE_CURRENT_VIDEO)
 })
 
 function closeComments() {

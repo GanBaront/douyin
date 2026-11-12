@@ -267,11 +267,21 @@ function click(uniqueId) {
 }
 
 onActivated(() => {
-  bus.emit(EVENT_KEY.TOGGLE_CURRENT_VIDEO)
+  // 详情页的 slide 常驻 :active="true"，激活/失活时直接广播播放/暂停指令（幂等），
+  // 避免离开页面后视频继续出声
+  bus.emit(EVENT_KEY.SINGLE_CLICK_BROADCAST, {
+    uniqueId: state.uniqueId,
+    index: state.index,
+    type: EVENT_KEY.ITEM_PLAY
+  })
 })
 
 onDeactivated(() => {
-  bus.emit(EVENT_KEY.TOGGLE_CURRENT_VIDEO)
+  bus.emit(EVENT_KEY.SINGLE_CLICK_BROADCAST, {
+    uniqueId: state.uniqueId,
+    index: state.index,
+    type: EVENT_KEY.ITEM_STOP
+  })
 })
 </script>
 

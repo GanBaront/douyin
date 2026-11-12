@@ -133,13 +133,35 @@ function togglePlay() {
   })
 }
 
+// 页面级暂停/恢复：幂等指令（非 toggle），避免多次广播导致的播放状态不同步
+function pauseCurrent() {
+  bus.emit(EVENT_KEY.SINGLE_CLICK_BROADCAST, {
+    uniqueId: props.uniqueId,
+    index: state.index,
+    type: EVENT_KEY.ITEM_STOP
+  })
+}
+
+function resumeCurrent() {
+  if (!props.active) return
+  bus.emit(EVENT_KEY.SINGLE_CLICK_BROADCAST, {
+    uniqueId: props.uniqueId,
+    index: state.index,
+    type: EVENT_KEY.ITEM_PLAY
+  })
+}
+
 onMounted(() => {
   bus.on(EVENT_KEY.SINGLE_CLICK, click)
+  bus.on(EVENT_KEY.PAUSE_CURRENT_VIDEO, pauseCurrent)
+  bus.on(EVENT_KEY.RESUME_CURRENT_VIDEO, resumeCurrent)
   bus.on(EVENT_KEY.UPDATE_ITEM, updateItem)
   bus.on(EVENT_KEY.TOGGLE_CURRENT_VIDEO, togglePlay)
 })
 onUnmounted(() => {
   bus.off(EVENT_KEY.SINGLE_CLICK, click)
+  bus.off(EVENT_KEY.PAUSE_CURRENT_VIDEO, pauseCurrent)
+  bus.off(EVENT_KEY.RESUME_CURRENT_VIDEO, resumeCurrent)
   bus.off(EVENT_KEY.UPDATE_ITEM, updateItem)
   bus.off(EVENT_KEY.TOGGLE_CURRENT_VIDEO, togglePlay)
 })

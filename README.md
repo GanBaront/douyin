@@ -40,16 +40,16 @@ npm run dev
 
 视频来源于以下抖音网红
 
-- `刘思瑶nice`: https://v.douyin.com/iYRAaERn/
-- `小橙子`: https://v.douyin.com/iYRAnudw/
-- `南恬`: https://v.douyin.com/iYRAbKm3/
-- `小霸宠`: https://v.douyin.com/iYRSosVB/
+- `刘思瑶nice`: https://v.douyin.com/iYRAaERn
+- `小橙子`: https://v.douyin.com/iYRAnudw
+- `南恬`: https://v.douyin.com/iYRAbKm3
+- `小霸宠`: https://v.douyin.com/iYRSosVB
 - `南翔`: https://www.douyin.com/user/MS4wLjABAAAAUx_0_1O2l2nScHoPafDfaCoaZ0Rh58qab7slIEJ66zg
 - `江寻千（九月）`: https://www.douyin.com/user/MS4wLjABAAAAigFjTEOAwKibGXwx9X5mWfu1uOUJWfeoHpvaXqzzRc0
 - `狼牙土豆饼`: https://www.douyin.com/user/MS4wLjABAAAA0GYT4bsbsfq4Sl4F1Y30CHGsBvTO6I8G6e358xkDfOQeNwJxazdnJAbBOKi88BWS
 - `雅儿有点菜.`: https://www.douyin.com/user/MS4wLjABAAAAQMlbBJHPALLVAAmtezq_GCeev1jZhb8IN_9SkPgKHuYLi1nwGeY3JeMnYdNmOb3Z
 - `Ke08`: https://www.douyin.com/user/MS4wLjABAAAAN2-T01Wy_KGQw7bD_Wq1Dx2Mk67k8G8IsglbpBqqN4g
-- `别吵吵`：https://www.douyin.com/user/MS4wLjABAAAAiGokh5WgO0DXWe_hCbx8c-00UHcImuvgLuMaK75W91E；
+- `别吵吵`：https://www.douyin.com/user/MS4wLjABAAAAiGokh5WgO0DXWe_hCbx8c-00UHcImuvgLuMaK75W91E
 - `栗子`：https://www.douyin.com/user/MS4wLjABAAAAZc9YoYvv5tVLT51QkG3CWq3fZgtkK9yM4jZXuQGPKtU
 - `小爱是也`：https://www.douyin.com/user/MS4wLjABAAAA0SIyL88oqM3THZdXen0Ygw8SWznebv-zlviXVmo21xA
 - `吃啥呢给我也来一口`：https://www.douyin.com/user/MS4wLjABAAAAQibgKYA1Tx0lMhNAEvd5KDlGelOWLWCv8ZQcjN7r-7M
