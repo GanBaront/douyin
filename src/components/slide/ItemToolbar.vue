@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseMusic from '../BaseMusic.vue'
-import { _formatNumber, cloneDeep } from '@/utils'
+import { _formatNumber, _checkImgUrl, cloneDeep } from '@/utils'
 import bus, { EVENT_KEY } from '@/utils/bus'
 import { Icon } from '@iconify/vue'
 import { useClick } from '@/utils/hooks/useClick'
@@ -77,7 +77,7 @@ const vClick = useClick()
     <div class="avatar-ctn mb2r">
       <img
         class="avatar"
-        :src="item.author?.avatar_168x168?.url_list?.[0]"
+        :src="_checkImgUrl(item.author?.avatar_168x168?.url_list?.[0])"
         alt=""
         v-click="() => bus.emit(EVENT_KEY.GO_USERINFO, props.item)"
       />

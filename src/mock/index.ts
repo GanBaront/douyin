@@ -146,7 +146,7 @@ export async function startMock() {
       200,
       {
         data: {
-          total: 844,
+          total: 320,
           list: (await getAllVideos()).slice(start, start + pageSize) // list: allRecommendVideos.slice(0, 6),
         },
         code: 200,
@@ -160,7 +160,7 @@ export async function startMock() {
       200,
       {
         data: {
-          total: 844,
+          total: 320,
           list: (await getAllVideos()).slice(page.offset, page.limit)
         },
         code: 200,
