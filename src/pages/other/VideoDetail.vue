@@ -179,11 +179,20 @@ function delayShowDialog(cb) {
 function setCurrentItem(item) {
   // console.log('sss',item,state.baseIndex)
   if (state.baseIndex !== 1) return
+  if (!item || !item.aweme_id) return
   if (state.currentItem.author?.uid !== item.author?.uid) {
     state.currentItem = {
       ...item,
       isRequest: false,
       aweme_list: []
+    }
+  } else if (state.currentItem.aweme_id !== item.aweme_id) {
+    // 同作者内滑动切换视频：更新当前视频本体，保留该作者的作品列表缓存，
+    // 否则评论面板的 videoId 停留在进入时的第一条，导致评论错位
+    state.currentItem = {
+      ...item,
+      isRequest: state.currentItem.isRequest,
+      aweme_list: state.currentItem.aweme_list
     }
   }
   // console.log('item', item)

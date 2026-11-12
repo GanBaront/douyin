@@ -228,6 +228,13 @@ export default {
       } else {
         this.comments = []
       }
+    },
+    videoId(newId) {
+      // 滑动切换视频时（面板可能保持打开），videoId 变化需重新拉取评论
+      if (this.modelValue && newId) {
+        this.comments = []
+        this.getData()
+      }
     }
   },
   data() {

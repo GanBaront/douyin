@@ -291,6 +291,14 @@ function setCurrentItem(item) {
       isRequest: false,
       aweme_list: []
     }
+  } else if (state.currentItem.aweme_id !== item.aweme_id) {
+    // 同作者内滑动切换视频：仅更新当前视频本体，保留作品列表缓存，
+    // 保证评论面板的 videoId 跟随当前播放的视频
+    state.currentItem = {
+      ...item,
+      isRequest: state.currentItem.isRequest,
+      aweme_list: state.currentItem.aweme_list
+    }
   }
 }
 
