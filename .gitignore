@@ -35,3 +35,4 @@ coverage
 # WorkBuddy 工作目录（记忆/临时脚本/调试工具）
 .workbuddy/
 scraper/.edge-profile/
+scraper/out/

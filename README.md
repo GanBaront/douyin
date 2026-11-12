@@ -73,3 +73,69 @@ npm run dev
 ## 许可协议
 
 [GPL](LICENSE)
+
+---
+
+## 项目结构与文件说明
+
+```
+douyin/
+├── public/                  # 静态资源（构建时原样拷贝）
+│   ├── data/                # 全部 Mock 数据（核心）
+│   │   ├── videos.json/md   # 推荐流视频数据（441 条，.md 为 7z 包仅供生产环境）
+│   │   ├── users.json/md    # 博主资料（16 位，含真实签名/粉丝数/头像）
+│   │   ├── comments/        # 每条视频的评论 video_id_{id}.json，一一对应
+│   │   ├── user_video_list/ # 各博主的个人作品列表（"我的作品"tab 数据源）
+│   │   ├── posts.md/json    # 图集数据
+│   │   └── goods.md         # 商城页商品数据
+│   ├── images/              # 视频封面图（1100+ 张，封面按文件名引用）
+│   └── libarchive.wasm      # 生产环境解压 .md 数据包用
+├── src/
+│   ├── api/                 # 接口定义（实际被 mock 拦截）
+│   │   ├── videos.ts        # 推荐/我的作品/评论等视频接口
+│   │   └── user.ts          # 用户资料/作品列表/关注等接口
+│   ├── assets/data/         # 打进包里的静态数据（好友列表、歌词、图集）
+│   ├── components/
+│   │   ├── Comment.vue      # 评论面板（拉取 comments/ 下的评论数据）
+│   │   ├── Posters.vue      # 作品九宫格（个人页作品 tab）
+│   │   ├── UserPanel.vue    # 博主主页面板（从视频进入作者页）
+│   │   ├── BaseFooter.vue   # 底部 TabBar
+│   │   └── slide/
+│   │       ├── BaseVideo.vue       # 视频播放器核心（播放/暂停/进度/双击赞）
+│   │       ├── SlideVerticalInfinite.vue  # 垂直无限滑动列表（上下滑切换）
+│   │       ├── SlideItem.vue       # 单个滑页容器
+│   │       ├── ItemDesc.vue        # 视频左侧文案/话题/音乐
+│   │       └── ItemToolbar.vue     # 右侧点赞/评论/收藏按钮栏
+│   ├── mock/index.ts        # axios-mock-adapter 拦截规则（所有接口的数据来源）
+│   ├── pages/
+│   │   ├── home/index.vue   # 首页骨架（底部 tab、推荐/关注等 5 个滑动页、我、用户面板）
+│   │   ├── home/slide/      # 推荐(Slide0)、长视频、关注(Slide2)、社区、同城(Slide4)
+│   │   ├── me/Me.vue        # 我的主页（作品/私密/喜欢/收藏 四个 tab）
+│   │   └── other/VideoDetail.vue  # 全屏视频详情页（从作品九宫格进入）
+│   ├── store/pinia.ts       # 全局状态（当前用户、好友列表）
+│   ├── utils/index.tsx      # 工具函数（_checkImgUrl、_fetch、滑动渲染器）
+│   └── router/              # 路由表（keep-alive 进出场控制）
+├── scraper/                 # 二次开发：抖音真实数据抓取脚本（Node + playwright-core）
+│   ├── browser.cjs          # Edge 持久化浏览器实例（登录态保存在 .edge-profile/）
+│   ├── login.cjs            # 打开浏览器等待扫码登录
+│   ├── videos.cjs           # 抓取博主主页视频列表（拦截页面自身接口）
+│   ├── comments.cjs         # 逐条视频抓取真实评论（支持断点续跑）
+│   ├── old-comments.cjs     # 为存量视频补抓评论
+│   ├── assemble.cjs         # 把抓取数据整合进 public/data/
+│   └── retry-comment.cjs    # 单条视频评论补抓
+├── node/                    # 上游作者的构建辅助脚本
+├── docs/                    # 上游 README 展示图
+└── vite.config.ts           # Vite 配置（代理、分包、压缩）
+```
+
+### 数据链路说明
+
+1. 页面发请求 → `src/mock/index.ts` 拦截 → 读取 `public/data/` 下对应 JSON 返回
+2. 开发环境直接读 `.json`；生产环境读 `.md`（7z 压缩包，规避托管平台审查，`libarchive-wasm` 运行时解压）
+3. **新增/替换博主数据的标准流程**：`node scraper/login.cjs` 登录抖音 → `node scraper/videos.cjs` 抓视频列表 → `node scraper/comments.cjs` 抓评论 → `node scraper/assemble.cjs` 整合落盘
+
+### 二次开发改动记录
+
+- 推荐流数据全部替换为真实博主视频（16 位博主 / 441 条视频），评论与视频一一对应
+- 修复：同作者内滑动切换视频时评论不刷新；页面切换时双视频同时出声；右侧头像 404
+- `.md` 数据文件在开发环境不生效（`_fetch` 会替换为 `.json`），修改数据请改 `.json` 后重新打包 `.md`
