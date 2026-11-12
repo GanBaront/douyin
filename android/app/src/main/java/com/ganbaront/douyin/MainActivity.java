@@ -19,7 +19,7 @@ public class MainActivity extends BridgeActivity {
     /**
      * 返回逻辑（覆盖所有系统版本与手势路径）：
      * 1. 当前不在首页（/me、/video-detail 等任何路由）→ 按一次返回首页
-     * 2. 已在首页 → 第一次提示"再按一次退出应用"，2 秒内第二次才真正退出
+     * 2. 已在首页 → 第一次提示"再按一次退出应用 (v3)"，2 秒内第二次才真正退出
      */
     @Override
     public void onBackPressed() {
@@ -38,7 +38,7 @@ public class MainActivity extends BridgeActivity {
             finish();
         } else {
             lastBackTime = now;
-            Toast.makeText(this, "再按一次退出应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "再按一次退出应用 (v3)", Toast.LENGTH_SHORT).show();
         }
     }
 
