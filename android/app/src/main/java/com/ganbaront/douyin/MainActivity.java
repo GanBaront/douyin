@@ -33,20 +33,24 @@ public class MainActivity extends BridgeActivity {
      */
     private void handleBack() {
         WebView webView = bridge != null ? bridge.getWebView() : null;
+        String url = webView != null ? webView.getUrl() : null;
+        android.util.Log.d("DouyinBack", "handleBack fired, url=" + url);
         if (webView == null) {
             finish();
             return;
         }
-        String url = webView.getUrl();
         if (!isHomeUrl(url)) {
+            android.util.Log.d("DouyinBack", "not home -> loadUrl home");
             webView.loadUrl(getHomeUrl(url));
             return;
         }
         long now = System.currentTimeMillis();
         if (now - lastBackTime < 2000L) {
+            android.util.Log.d("DouyinBack", "double back -> finish");
             finish();
         } else {
             lastBackTime = now;
+            android.util.Log.d("DouyinBack", "first back on home -> toast");
             Toast.makeText(this, "再按一次退出应用 (v4)", Toast.LENGTH_SHORT).show();
         }
     }
@@ -56,7 +60,8 @@ public class MainActivity extends BridgeActivity {
             return true;
         }
         String path = Uri.parse(url).getPath();
-        return path == null || path.isEmpty() || "/".equals(path) || "/index.html".equals(path);
+        return path == null || path.isEmpty() || "/".equals(path) || "/index.html".equals(path)
+                || "/home".equals(path);
     }
 
     private String getHomeUrl(String current) {
