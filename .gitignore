@@ -36,3 +36,9 @@ coverage
 .workbuddy/
 scraper/.edge-profile/
 scraper/out/
+android/.quarantine/
+android/app/build/
+android/.gradle/
+android/local.properties
+dist/
+*.apk

@@ -1,0 +1,11 @@
+{
+  "appId": "com.ganbaront.douyin",
+  "appName": "Douyin-Vue",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}
