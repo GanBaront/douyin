@@ -52,3 +52,8 @@ try {
 } catch(Exception e) {
     logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
 }
+
+// 源码含中文（UTF-8），强制 javac 使用 UTF-8 解码，否则 GBK 环境下字符串字面量会被破坏
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
