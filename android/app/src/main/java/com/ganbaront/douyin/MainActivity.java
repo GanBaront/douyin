@@ -1,9 +1,11 @@
 package com.ganbaront.douyin;
 
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
 import com.getcapacitor.BridgeActivity;
 
@@ -14,18 +16,25 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Android 13+：注册系统新通道回调（predictive back）
+        // HyperOS 等新系统会绕过 onBackPressed 直接走该通道，必须在这里拦截
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                    this::handleBack);
+        }
     }
 
     /**
-     * 返回逻辑（覆盖所有系统版本与手势路径）：
+     * 返回逻辑（新旧通道统一入口）：
      * 1. 当前不在首页（/me、/video-detail 等任何路由）→ 按一次返回首页
-     * 2. 已在首页 → 第一次提示"再按一次退出应用 (v3)"，2 秒内第二次才真正退出
+     * 2. 已在首页 → 第一次提示"再按一次退出应用 (v4)"，2 秒内第二次才真正退出
      */
-    @Override
-    public void onBackPressed() {
+    private void handleBack() {
         WebView webView = bridge != null ? bridge.getWebView() : null;
         if (webView == null) {
-            super.onBackPressed();
+            finish();
             return;
         }
         String url = webView.getUrl();
@@ -38,7 +47,7 @@ public class MainActivity extends BridgeActivity {
             finish();
         } else {
             lastBackTime = now;
-            Toast.makeText(this, "再按一次退出应用 (v3)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "再按一次退出应用 (v4)", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -55,5 +64,13 @@ public class MainActivity extends BridgeActivity {
         String host = uri.getHost() != null ? uri.getHost() : "localhost";
         int port = uri.getPort();
         return uri.getScheme() + "://" + host + (port > 0 ? ":" + port : "") + "/";
+    }
+
+    /**
+     * Android 12 及以下的旧通道兜底（13+ 由上方 OnBackInvokedCallback 接管）
+     */
+    @Override
+    public void onBackPressed() {
+        handleBack();
     }
 }
