@@ -42,3 +42,5 @@ android/.gradle/
 android/local.properties
 dist/
 *.apk
+androidx/
+androidx/
