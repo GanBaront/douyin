@@ -68,22 +68,23 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError) => {
     console.log('error', error)
+    const failUrl = error.config && error.config.url ? String(error.config.url) : '未知URL'
     // console.log(error.response)
     // console.log(error.response.status)
     if (error.response === undefined) {
-      _notice('服务器响应超时')
+      _notice('响应超时: ' + failUrl)
       return { success: false, code: 500, msg: '服务器响应超时', data: [] }
     }
     if (error.response.status >= 500) {
-      _notice('服务器出现错误')
+      _notice('服务器错误: ' + error.response.status + ' ' + failUrl)
       return { success: false, code: 500, msg: '服务器出现错误', data: [] }
     }
     if (error.response.status === 404) {
-      _notice('接口不存在')
+      _notice('接口不存在: ' + failUrl)
       return { success: false, code: 404, msg: '接口不存在', data: [] }
     }
     if (error.response.status === 400) {
-      _notice('接口报错')
+      _notice('接口报错: ' + failUrl)
       return { success: false, code: 400, msg: '接口报错', data: [] }
     }
     if (error.response.status === 401) {
@@ -91,7 +92,7 @@ axiosInstance.interceptors.response.use(
     } else {
       const data: any = error.response.data
       if (data === null || data === undefined) {
-        _notice('请求失败，请稍后重试！')
+        _notice('请求失败: ' + error.response.status + ' ' + failUrl)
         return { success: true, code: 200, data: [] }
       } else {
         const resCode = data.code

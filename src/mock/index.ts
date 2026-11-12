@@ -15,6 +15,7 @@ function getPage2(params: any): { limit: number; offset: number; pageNo: number 
 
 let allRecommendPosts = []
 let userVideos = []
+let commentsAllData: Record<string, any[]> | null = null
 // 推荐流直接使用 public/data/videos.json 的数据（posts6 旧图集不再注入信息流，
 // 避免其内嵌的旧作者信息（如彭十六elf）污染新博主的主页）
 
@@ -170,6 +171,22 @@ export async function startMock() {
   })
 
   mock.onGet(/video\/comments/).reply(async (config) => {
+    // 优先使用打包内联的评论数据（绕开 WebView 对 data/comments/ 文件的服务，
+    // 修复 APK 内评论区加载失败的问题）；内联缺失时回退到文件请求
+    let id = config.params.id
+    id = id ? String(id) : ''
+    try {
+      if (!commentsAllData) {
+        const mod: any = await import('../assets/data/comments-all.json')
+        commentsAllData = mod.default || mod
+      }
+      const inline = commentsAllData && commentsAllData[id]
+      if (inline && inline.length) {
+        return [200, { data: inline, code: 200 }]
+      }
+    } catch (e) {
+      // 内联加载失败时继续走文件请求
+    }
     // 兜底用的旧视频 id（评论文件缺失时随机返回一份旧评论）
     const fallbackIds = [
       '7260749400622894336',
@@ -192,22 +209,26 @@ export async function startMock() {
     const loadComments = async (vid: string) => {
       try {
         const r = await _fetch(`${FILE_URL}/comments/video_id_${vid}.md`)
-        return await r.json()
-      } catch (e) {
+        const j = await r.json()
+        if (!j || !j.length) loadError = `文件为空(video_id_${vid})`
+        return j
+      } catch (e: any) {
+        loadError = `${e && e.message ? e.message : String(e)} [${vid}]`
         return null
       }
     }
-    let id = config.params.id
+    let loadError = ''
     // 优先加载该视频自己的评论文件（一一对应）
     let v = id ? await loadComments(String(id)) : null
     if (!v) {
       id = fallbackIds[random(0, fallbackIds.length - 1)]
       v = await loadComments(String(id))
     }
-    if (v) {
+    if (v && v.length) {
       return [200, { data: v, code: 200 }]
     }
-    return [200, { code: 500 }]
+    // 诊断模式：把真实失败原因透出到提示条
+    return [200, { code: 500, message: `评论诊断: ${loadError || '未知原因'}` }]
   })
 
   mock.onGet(/video\/private/).reply(async (config) => {
